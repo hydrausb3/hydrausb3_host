@@ -1,7 +1,7 @@
 HydraUSB3_USB_benchmark
 =======
 
-HydraUSB3_USB_benchmark is a small utility to do benchmarck on USB2 High Speed and USB3 Super Speed firmware with [HydraUSB3_USB](https://github.com/hydrausb3/hydrausb3_fw/tree/main/HydraUSB3_USB) Firmware.
+HydraUSB3_USB_benchmark is a small utility to execute commands and do benchmarck on USB2 High Speed and USB3 Super Speed firmware with [HydraUSB3_USB](https://github.com/hydrausb3/hydrausb3_fw/tree/main/HydraUSB3_USB) Firmware.
 
 This example use libusb to exchange commands/data over USB2 High Speed and USB3 Super Speed (Device Bulk) with [HydraUSB3_USB](https://github.com/hydrausb3/hydrausb3_fw/tree/main/HydraUSB3_USB) Firmware:
 * `HydraUSB3_USB_benchmark` use following USB commands (using libusb)
