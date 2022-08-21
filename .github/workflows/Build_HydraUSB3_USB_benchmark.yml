@@ -66,12 +66,12 @@ jobs:
 
     - name: Get app version
       id: id_version
-      shell: bash
+      shell: msys2
       run: |
          app_major_minor_patch=`grep -oP '(?<=VERSION = )[0-9.]+' Makefile`
          echo "::set-output name=app_version::v$app_major_minor_patch-${{steps.id_date.outputs.timestamp}}"
     - name: Build app
-      shell: bash
+      shell: msys2
       run: |
          mingw32-make
          cp /mingw64/bin/libusb-1.0.dll ./
