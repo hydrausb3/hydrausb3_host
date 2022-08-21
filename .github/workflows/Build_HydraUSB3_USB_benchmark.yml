@@ -3,10 +3,10 @@ name: Build_HydraUSB3_USB_benchmark
 on:
   push:
     paths:
-      - 'HydraUSB3_USB_benchmark/*'
+      - '*'
   pull_request:
     paths:
-      - 'HydraUSB3_USB_benchmark/*'
+      - '*'
 defaults:
   run:
     working-directory: HydraUSB3_USB_benchmark
