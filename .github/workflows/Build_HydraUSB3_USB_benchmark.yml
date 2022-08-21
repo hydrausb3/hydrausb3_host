@@ -67,11 +67,13 @@ jobs:
       id: id_version
       shell: msys2 {0}
       run: |
+         cd HydraUSB3_USB_benchmark
          app_major_minor_patch=`grep -oP '(?<=VERSION = )[0-9.]+' Makefile`
          echo "::set-output name=app_version::v$app_major_minor_patch-${{steps.id_date.outputs.timestamp}}"
     - name: Build app
       shell: msys2 {0}
       run: |
+         cd HydraUSB3_USB_benchmark
          mingw32-make
          cp /mingw64/bin/libusb-1.0.dll ./
     - name: Upload artifact
