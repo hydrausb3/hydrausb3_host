@@ -14,8 +14,10 @@ jobs:
   HydraUSB3_USB_benchmark_Ubuntu:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
-
+    - name: Checkout repository and submodules
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
     - name: Install pkg-config libusb-1.0-0-dev
       run: sudo apt-get install pkg-config libusb-1.0-0-dev
 
@@ -48,7 +50,10 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout repository and submodules
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
     - uses: msys2/setup-msys2@v2
       with:
           msystem: MINGW64
