@@ -1,0 +1,77 @@
+name: Build_HydraUSB3_USB_benchmark
+
+on:
+  push:
+    paths:
+      - 'HydraUSB3_USB_benchmark/*'
+  pull_request:
+    paths:
+      - 'HydraUSB3_USB_benchmark/*'
+defaults:
+  run:
+    working-directory: HydraUSB3_USB_benchmark
+jobs:
+  HydraUSB3_USB_benchmark_Ubuntu:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install pkg-config libusb-1.0-0-dev
+      run: sudo apt-get install pkg-config libusb-1.0-0-dev
+
+    - name: Get build timestamp
+      id: id_date
+      shell: bash
+      run: echo "::set-output name=timestamp::$(date +%Y-%m-%d-%H-%M-%S)"
+
+    - name: Get app version
+      id: id_version
+      shell: bash
+      run: |
+         app_major_minor_patch=`grep -oP '(?<=VERSION = )[0-9.]+' Makefile`
+         echo "::set-output name=app_version::v$app_major_minor_patch-${{steps.id_date.outputs.timestamp}}"
+    - name: Build app
+      shell: bash
+      run: |
+         make
+    - name: Upload artifact
+      env: 
+        APP_VERSION: "${{steps.id_version.outputs.app_version}}"
+      uses: actions/upload-artifact@v2
+      with:
+        name: HydraUSB3_USB_benchmark_Ubuntu-${{env.APP_VERSION}}
+        path: ./
+
+  HydraUSB3_USB_benchmark_Windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: msys2/setup-msys2@v2
+      with:
+          msystem: MINGW64
+          update: true
+          install: mingw-w64-x86_64-make mingw-w64-x86_64-pkgconf mingw-w64-x86_64-gcc mingw-w64-x86_64-libusb
+
+    - name: Get build timestamp
+      id: id_date
+      run: echo "::set-output name=timestamp::$(date +%Y-%m-%d-%H-%M-%S)"
+
+    - name: Get app version
+      id: id_version     
+      run: |
+         app_major_minor_patch=`grep -oP '(?<=VERSION = )[0-9.]+' Makefile`
+         echo "::set-output name=app_version::v$app_major_minor_patch-${{steps.id_date.outputs.timestamp}}"
+    - name: Build app
+      run: |
+         mingw32-make
+         cp /mingw64/bin/libusb-1.0.dll ./
+    - name: Upload artifact
+      env: 
+        APP_VERSION: "${{steps.id_version.outputs.app_version}}"
+      uses: actions/upload-artifact@v2
+      with:
+        name: HydraUSB3_USB_benchmark_Windows-${{env.APP_VERSION}}
+        path: ./
