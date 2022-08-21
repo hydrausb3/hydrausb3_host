@@ -12,7 +12,7 @@
 #include <sys/types.h>
 #include <string.h>
 #include <stdarg.h>
- #ifndef _WIN32
+#ifndef _WIN32
 #include <unistd.h> // usleep ...
 #endif
 
@@ -128,7 +128,7 @@ void log_printf_dbg(const char* fmt, ...)
 	va_start(args, fmt);
 	vfprintf(stdout, fmt, args);
 	if(pFile != NULL)
-	{	
+	{
 		vfprintf(pFile, fmt, args);
 	}
 	va_end(args);
@@ -387,8 +387,8 @@ static void print_device(libusb_device *dev, libusb_device_handle *handle, int v
 	}
 
 	log_printf_dbg("Dev (bus %u, device %u): %04X - %04X speed: %s\n",
-			   libusb_get_bus_number(dev), libusb_get_device_address(dev),
-			   desc.idVendor, desc.idProduct, speed);
+				   libusb_get_bus_number(dev), libusb_get_device_address(dev),
+				   desc.idVendor, desc.idProduct, speed);
 
 	if (verbose)
 	{
@@ -615,7 +615,7 @@ struct libusb_device_handle* usb_opendev(int verbose)
 		{
 			if (desc.iSerialNumber)
 			{
-				#define MAX_STRING_LEN (256)
+#define MAX_STRING_LEN (256)
 				char string[MAX_STRING_LEN+1] = { 0 };
 				int string_len;
 				string_len = libusb_get_string_descriptor_ascii(handle, desc.iSerialNumber, (unsigned char*)string, MAX_STRING_LEN);
@@ -628,17 +628,17 @@ struct libusb_device_handle* usb_opendev(int verbose)
 					}
 					else
 					{
-						log_printf("Error USB SerialNumber content(%.13s) is different from expected data(%.13s)\n", string, USB_SERIAL_HEADER_EXPECTED);							
-					}					
+						log_printf("Error USB SerialNumber content(%.13s) is different from expected data(%.13s)\n", string, USB_SERIAL_HEADER_EXPECTED);
+					}
 				}
 				else
 				{
-					log_printf("Error USB SerialNumber(%s) len=%d is different from expected len=%d\n", string, string_len, USB_SERIAL_NUMBER_LEN_EXPECTED);							
-				}			
+					log_printf("Error USB SerialNumber(%s) len=%d is different from expected len=%d\n", string, string_len, USB_SERIAL_NUMBER_LEN_EXPECTED);
+				}
 			}
 			else
 			{
-				log_printf("Error no USB SerialNumber descriptor available\n");				
+				log_printf("Error no USB SerialNumber descriptor available\n");
 			}
 			break;
 		}

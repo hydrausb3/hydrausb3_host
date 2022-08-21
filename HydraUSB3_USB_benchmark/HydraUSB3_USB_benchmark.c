@@ -87,17 +87,23 @@ void consoleHandler(int s)
 /**
  * This is the main configuration of all options available.
  */
-static struct cag_option options[] = {
-  {.identifier = 'v',
-   .access_letters = "v",
-   .access_name = "verbose",
-   .value_name = "VALUE",
-   .description = "Verbose mode to have more detais on output"},
+static struct cag_option options[] =
+{
+	{
+		.identifier = 'v',
+		.access_letters = "v",
+		.access_name = "verbose",
+		.value_name = "VALUE",
+		.description = "Verbose mode to have more detais on output"
+	},
 
-  {.identifier = 'h',
-    .access_letters = "h",
-    .access_name = "help",
-    .description = "Shows the command help"}};
+	{
+		.identifier = 'h',
+		.access_letters = "h",
+		.access_name = "help",
+		.description = "Shows the command help"
+	}
+};
 
 /**
  * This is a custom project configuration structure where you can store the
@@ -105,7 +111,7 @@ static struct cag_option options[] = {
  */
 struct cag_configuration
 {
-  int verbose;
+	int verbose;
 };
 
 int main(int argc, char *argv[])
@@ -132,17 +138,19 @@ int main(int argc, char *argv[])
 	* Prepare the context and iterate over all options.
 	*/
 	cag_option_prepare(&context, options, CAG_ARRAY_SIZE(options), argc, argv);
-	while (cag_option_fetch(&context)) {
+	while (cag_option_fetch(&context))
+	{
 		identifier = cag_option_get(&context);
-		switch (identifier) {
-		case 'v':
-		  value = cag_option_get_value(&context);
-		  config.verbose = atoi(value);
-		  break;
-		case 'h':
-		  printf("Usage: HydraUSB3_USB_benchmark [OPTION]...\n");
-		  cag_option_print(options, CAG_ARRAY_SIZE(options), stdout);
-		  return EXIT_SUCCESS;
+		switch (identifier)
+		{
+			case 'v':
+				value = cag_option_get_value(&context);
+				config.verbose = atoi(value);
+				break;
+			case 'h':
+				printf("Usage: HydraUSB3_USB_benchmark [OPTION]...\n");
+				cag_option_print(options, CAG_ARRAY_SIZE(options), stdout);
+				return EXIT_SUCCESS;
 		}
 	}
 
@@ -187,7 +195,7 @@ int main(int argc, char *argv[])
 	log_printf("HydraUSB3_USB_benchmark v%s B.VERNOUX 20-Aug-2022\n", VERSION);
 
 	log_printf("Options: verbose=%d\n",
-				config.verbose);
+			   config.verbose);
 
 	log_printf("USB3_EP1_BULK_BURST_SIZE=%d USB3_EP2_BULK_BURST_SIZE=%d\n", USB3_EP1_BULK_BURST_SIZE, USB3_EP2_BULK_BURST_SIZE);
 
@@ -241,7 +249,7 @@ int main(int argc, char *argv[])
 	{
 		error_exit("Error to open HydraUSB3 device, it is expected to be enumerated as USB2 HighSpeed(480Mbit)\n");
 	}
-	usb_speed = usb_get_device_speed(handle);	
+	usb_speed = usb_get_device_speed(handle);
 	if(usb_speed == LIBUSB_SPEED_HIGH)
 	{
 		log_printf("Test end with success\n");
@@ -311,7 +319,7 @@ int main(int argc, char *argv[])
 	{
 		error_exit("Error to open HydraUSB3 device, it is expected to be enumerated as USB3 SuperSpeed(5Gbit)\n");
 	}
-	usb_speed = usb_get_device_speed(handle);	
+	usb_speed = usb_get_device_speed(handle);
 	if(usb_speed == LIBUSB_SPEED_SUPER)
 	{
 		log_printf("Test end with success\n");

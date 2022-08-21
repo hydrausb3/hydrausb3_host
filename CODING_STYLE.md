@@ -21,5 +21,10 @@ Coding Style of the project: Linux Kernel coding style see: https://www.kernel.o
 ### Configuration of coding style with AStyle
 
 Can be also done automatically with open source tool AStyle: http://astyle.sourceforge.net/
+- `astyle -T --indent-switches --style=bsd --lineend=linux my_c_file.c`
 
-With following syntax: `astyle -T --indent-switches --style=bsd --lineend=linux my_c_file.c`
+With following syntax (Linux):
+```
+cd ~\
+astyle -T --indent-switches --style=bsd --lineend=linux --recursive *.c *.h
+```

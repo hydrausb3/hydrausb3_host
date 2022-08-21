@@ -14,10 +14,10 @@
 #include "libusb.h"
 
 #ifndef _WIN32
-	#include <errno.h>
-	#include <signal.h>
-	#include <unistd.h>
-	#include <sys/time.h>
+#include <errno.h>
+#include <signal.h>
+#include <unistd.h>
+#include <sys/time.h>
 #endif
 
 #ifdef __cplusplus
