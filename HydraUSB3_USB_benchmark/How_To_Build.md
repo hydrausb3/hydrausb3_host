@@ -1,6 +1,6 @@
 ### How To Build
 
-GitHub Workflows / CI Build is available on [Build_HydraUSB3_USB_benchmark.yml](.github/workflows/Build_HydraUSB3_USB_benchmark.yml)
+GitHub Workflows / CI Build is available on [Build_HydraUSB3_USB_benchmark.yml](https://github.com/hydrausb3/hydrausb3_host/blob/main/.github/workflows/Build_HydraUSB3_USB_benchmark.yml)
 
 ###  GNU/Linux Ubuntu 20.04 LTS
 #### Prerequisites
