@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : libusb_portable.h
 * Author             : bvernoux
-* Version            : V1.0
-* Date               : 2022/08/20
+* Version            : V1.0.1
+* Date               : 2022/08/22
 * Description        :
 * Copyright (c) 2022 Benjamin VERNOUX
 * SPDX-License-Identifier: Apache-2.0
@@ -28,7 +28,8 @@ extern "C"
 #define LIBUSB_BULK_TRANSFER_TIMEOUT_MILLISEC (2000)
 
 #define USB3_EP1_BULK_BURST_SIZE (4*1024) // This size corresponds to USB3 EP1 Bulk with 4 burst(so 4x1024 bytes)
-#define USB3_EP2_BULK_BURST_SIZE (8*1024) // This size corresponds to USB3 EP2 Bulk with 8 burst(so 8x1024 bytes)
+// Warning USB3 enpoint 2 bulk with 8 or 16 burst can be problematic on some PC so default is set to 4
+#define USB3_EP2_BULK_BURST_SIZE (4*1024) // This size corresponds to USB3 EP2 Bulk with 4 burst(so 4x1024 bytes)
 #define USB2_BULK_SIZE 512
 
 uint32_t swap_uint32(uint32_t val);

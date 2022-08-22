@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : HydraUSB3_USB_benchmark.c
 * Author             : bvernoux
-* Version            : V1.0
-* Date               : 2022/08/20
+* Version            : V1.0.1
+* Date               : 2022/08/22
 * Description        :
 * Copyright (c) 2022 Benjamin VERNOUX
 * SPDX-License-Identifier: Apache-2.0
@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
 	}
 	log_printf_init(pFile);
 
-	log_printf("HydraUSB3_USB_benchmark v%s B.VERNOUX 20-Aug-2022\n", VERSION);
+	log_printf("HydraUSB3_USB_benchmark v%s B.VERNOUX 22-Aug-2022\n", VERSION);
 
 	log_printf("Options: verbose=%d\n",
 			   config.verbose);

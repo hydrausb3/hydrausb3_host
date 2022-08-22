@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : libusb_portable.c
 * Author             : bvernoux
-* Version            : V1.0
-* Date               : 2022/08/20
+* Version            : V1.0.1
+* Date               : 2022/08/22
 * Description        :
 * Copyright (c) 2022 Benjamin VERNOUX
 * SPDX-License-Identifier: Apache-2.0
@@ -127,9 +127,11 @@ void log_printf_dbg(const char* fmt, ...)
 
 	va_start(args, fmt);
 	vfprintf(stdout, fmt, args);
+	fflush(stdout);	
 	if(pFile != NULL)
 	{
 		vfprintf(pFile, fmt, args);
+		fflush(pFile);
 	}
 	va_end(args);
 }
@@ -140,9 +142,11 @@ void log_printf(const char* fmt, ...)
 
 	va_start(args, fmt);
 	vfprintf(stdout, fmt, args);
+	fflush(stdout);	
 	if(pFile != NULL)
 	{
 		vfprintf(pFile, fmt, args);
+		fflush(pFile);
 	}
 	va_end(args);
 }
