@@ -21,112 +21,110 @@ This host tools has been tested with HydraUSB3 v1 + Firmware [HydraUSB3_USB](htt
 
 Example output of `HydraUSB3_USB_benchmark` on Windows10 (Asus N56VZ Corei7-3630QM CPU@2.40GHz):
 ```
-HydraUSB3_USB_benchmark v1.0.1 B.VERNOUX 22-Aug-2022
+HydraUSB3_USB_benchmark v1.0.2 B.VERNOUX 31-Aug-2022
 Options: verbose=0
 USB3_EP1_BULK_BURST_SIZE=4096 USB3_EP2_BULK_BURST_SIZE=4096
 Using libusb v1.0.26.11724
-2022-08-22 12:21:32.732 (0.209 s) Dev (bus 2, device 9): 16C0 - 05DC speed: 5G
+2022-08-31 06:09:21.362 (0.207 s) Dev (bus 2, device 10): 16C0 - 05DC speed: 5G
 Test end with success
 
 Start USB_TestDataIntegrity(libusb_bulk_transfer) Tests
 libusb_bulk_transfer(WriteEP=0x02)/libusb_bulk_transfer(ReadEP=0x82)/memcmp: 10000 times 4096 Bytes ***
-2022-08-22 12:21:32.752 (0.228 s) Start Test
-2022-08-22 12:21:34.276 (1.753 s) End Test
-Average speed 53.7 MBytes/Sec, Total=81920000 Bytes/81 MBytes
+2022-08-31 06:09:21.378 (0.222 s) Start Test
+2022-08-31 06:09:22.917 (1.762 s) End Test
+Average speed 53.2 MBytes/Sec, Total=81920000 Bytes/81 MBytes
 End USB_TestDataIntegrity(libusb_bulk_transfer) Tests
 Test end with success
 
 Start USB_TestDataSpeed(libusb_bulk_transfer) Tests
 libusb_bulk_transfer(WriteEP=0x02)/libusb_bulk_transfer(ReadEP=0x82): 100 times 8388608 Bytes ***
-2022-08-22 12:21:34.302 (1.779 s) Start Test1 USB Bulk Write(libusb_bulk_transfer)
-2022-08-22 12:21:37.450 (4.927 s) End Test
-Average speed 266.9 MBytes/Sec, Total=838860800 Bytes/838 MBytes
-2022-08-22 12:21:37.466 (4.943 s) Start Test2 USB Bulk Read(libusb_bulk_transfer)
-2022-08-22 12:21:39.958 (7.435 s) End Test
+2022-08-31 06:09:22.940 (1.784 s) Start Test1 USB Bulk Write(libusb_bulk_transfer)
+2022-08-31 06:09:26.112 (4.957 s) End Test
+Average speed 264.4 MBytes/Sec, Total=838860800 Bytes/838 MBytes
+2022-08-31 06:09:26.112 (4.957 s) Start Test2 USB Bulk Read(libusb_bulk_transfer)
+2022-08-31 06:09:28.620 (7.465 s) End Test
 Average speed 336.6 MBytes/Sec, Total=838860800 Bytes/838 MBytes
-End USB_TestDataIntegrity(libusb_bulk_transfer) Tests
+End USB_TestDataSpeed(libusb_bulk_transfer) Tests
 Test end with success
 
-2022-08-22 12:21:39.974 (7.451 s) Start USB2 HS Force
-Using libusb v1.0.26.11724
-2022-08-22 12:21:41.006 (8.482 s) Dev (bus 2, device 10): 16C0 - 05DC speed: 480M
-2022-08-22 12:21:41.006 (8.482 s) End USB2 HS Force
+2022-08-31 06:09:28.635 (7.480 s) Start USB2 HS Force
+2022-08-31 06:09:29.654 (8.499 s) Dev (bus 2, device 11): 16C0 - 05DC speed: 480M
+2022-08-31 06:09:29.664 (8.508 s) End USB2 HS Force
 Test end with success
 
 Start USB_TestDataIntegrity(libusb_bulk_transfer) Tests
 libusb_bulk_transfer(WriteEP=0x02)/libusb_bulk_transfer(ReadEP=0x82)/memcmp: 10000 times 512 Bytes ***
-2022-08-22 12:21:41.026 (8.502 s) Start Test
-2022-08-22 12:21:42.721 (10.198 s) End Test
-Average speed 6.0 MBytes/Sec, Total=10240000 Bytes/10 MBytes
+2022-08-31 06:09:29.683 (8.528 s) Start Test
+2022-08-31 06:09:31.363 (10.208 s) End Test
+Average speed 6.1 MBytes/Sec, Total=10240000 Bytes/10 MBytes
 End USB_TestDataIntegrity(libusb_bulk_transfer) Tests
 Test end with success
 
 Start USB_TestDataSpeed(libusb_bulk_transfer) Tests
 libusb_bulk_transfer(WriteEP=0x02)/libusb_bulk_transfer(ReadEP=0x82): 10 times 8388608 Bytes ***
-2022-08-22 12:21:42.752 (10.229 s) Start Test1 USB Bulk Write(libusb_bulk_transfer)
-2022-08-22 12:21:44.480 (11.957 s) End Test
+2022-08-31 06:09:31.395 (10.239 s) Start Test1 USB Bulk Write(libusb_bulk_transfer)
+2022-08-31 06:09:33.122 (11.967 s) End Test
 Average speed 48.6 MBytes/Sec, Total=83886080 Bytes/83 MBytes
-2022-08-22 12:21:44.480 (11.957 s) Start Test2 USB Bulk Read(libusb_bulk_transfer)
-2022-08-22 12:21:48.139 (15.615 s) End Test
-Average speed 22.9 MBytes/Sec, Total=83886080 Bytes/83 MBytes
-End USB_TestDataIntegrity(libusb_bulk_transfer) Tests
+2022-08-31 06:09:33.122 (11.967 s) Start Test2 USB Bulk Read(libusb_bulk_transfer)
+2022-08-31 06:09:36.781 (15.626 s) End Test
+Average speed 23.0 MBytes/Sec, Total=83886080 Bytes/83 MBytes
+End USB_TestDataSpeed(libusb_bulk_transfer) Tests
 Test end with success
 
-2022-08-22 12:21:48.154 (15.631 s) Start Read USB2 Status
+2022-08-31 06:09:36.796 (15.641 s) Start Read USB2 Status
 USBS USB2:
 USB2 SPEED=1 (0=FS,1=HS,2=LS)
 Test end with success
 
-2022-08-22 12:21:48.154 (15.631 s) Start USB3 Force
-Using libusb v1.0.26.11724
-2022-08-22 12:21:49.173 (16.649 s) Dev (bus 2, device 11): 16C0 - 05DC speed: 5G
-2022-08-22 12:21:49.182 (16.659 s) End USB3 Force
+2022-08-31 06:09:36.796 (15.641 s) Start USB3 Force
+2022-08-31 06:09:37.823 (16.668 s) Dev (bus 2, device 12): 16C0 - 05DC speed: 5G
+2022-08-31 06:09:37.823 (16.668 s) End USB3 Force
 Test end with success
 
 Start USB_TestDataIntegrity(libusb_bulk_transfer) Tests
 libusb_bulk_transfer(WriteEP=0x02)/libusb_bulk_transfer(ReadEP=0x82)/memcmp: 10000 times 4096 Bytes ***
-2022-08-22 12:21:49.192 (16.669 s) Start Test
-2022-08-22 12:21:50.698 (18.175 s) End Test
-Average speed 54.4 MBytes/Sec, Total=81920000 Bytes/81 MBytes
+2022-08-31 06:09:37.843 (16.688 s) Start Test
+2022-08-31 06:09:39.338 (18.183 s) End Test
+Average speed 54.8 MBytes/Sec, Total=81920000 Bytes/81 MBytes
 End USB_TestDataIntegrity(libusb_bulk_transfer) Tests
 Test end with success
 
 Start USB_TestDataSpeed(libusb_bulk_transfer) Tests
 libusb_bulk_transfer(WriteEP=0x02)/libusb_bulk_transfer(ReadEP=0x82): 100 times 8388608 Bytes ***
-2022-08-22 12:21:50.714 (18.190 s) Start Test1 USB Bulk Write(libusb_bulk_transfer)
-2022-08-22 12:21:53.877 (21.353 s) End Test
+2022-08-31 06:09:39.354 (18.199 s) Start Test1 USB Bulk Write(libusb_bulk_transfer)
+2022-08-31 06:09:42.517 (21.362 s) End Test
 Average speed 266.5 MBytes/Sec, Total=838860800 Bytes/838 MBytes
-2022-08-22 12:21:53.946 (21.422 s) Start Test2 USB Bulk Read(libusb_bulk_transfer)
-2022-08-22 12:21:56.453 (23.930 s) End Test
+2022-08-31 06:09:42.533 (21.378 s) Start Test2 USB Bulk Read(libusb_bulk_transfer)
+2022-08-31 06:09:45.025 (23.870 s) End Test
 Average speed 336.6 MBytes/Sec, Total=838860800 Bytes/838 MBytes
-End USB_TestDataIntegrity(libusb_bulk_transfer) Tests
+End USB_TestDataSpeed(libusb_bulk_transfer) Tests
 Test end with success
 
-2022-08-22 12:21:56.469 (23.946 s) Read Log
+2022-08-31 06:09:45.041 (23.886 s) Read Log
 00s 000ms 000us Start
 00s 000ms 041us ChipID(Hex)=69
 00s 000ms 096us FLASH_ROMA_UID(Hex)=84 97 3B 26 3B 38 FA F5
 00s 000ms 215us HydraUSB3_USB FW v1.0.1 22-Aug-2022(CPU Freq=120 MHz)
 00s 000ms 276us DEF_ENDP1_MAX_SIZE=4096 DEF_ENDP2_MAX_SIZE=4096
-00s 018ms 242us USB3
-08s 846ms 478us cmd USB2
-08s 846ms 518us Force USB2
-09s 048ms 528us USB2
-17s 021ms 088us cmd USBS USB2
-17s 029ms 462us cmd USB3
-17s 029ms 503us Force USB3
-17s 048ms 572us USB3
-25s 335ms 306us cmd LOGR
+00s 018ms 214us USB3
+11s 012ms 243us cmd USB2
+11s 012ms 283us Force USB2
+11s 518ms 268us USB2
+19s 170ms 645us cmd USBS USB2
+19s 178ms 915us cmd USB3
+19s 178ms 955us Force USB3
+19s 518ms 312us USB3
+27s 414ms 101us cmd LOGR
 
-2022-08-22 12:21:56.500 (23.977 s) Start Read USB3 Status
+2022-08-31 06:09:45.072 (23.917 s) Start Read USB3 Status
 USBS USB3:
 LINK_STATUS=0x00000109
 LINK_ERR_STATUS=0x00000000
 LINK_ERR_CNT=0x00000000
 
-2022-08-22 12:21:56.516 (23.992 s) Read Log
-25s 372ms 631us cmd USBS USB3
-25s 383ms 604us cmd LOGR
+2022-08-31 06:09:45.094 (23.939 s) Read Log
+27s 458ms 451us cmd USBS USB3
+27s 469ms 771us cmd LOGR
 
 Tests end with success
 ```
