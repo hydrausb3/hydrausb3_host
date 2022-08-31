@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : libusb_portable.h
 * Author             : bvernoux
-* Version            : V1.0.1
-* Date               : 2022/08/22
+* Version            : V1.0.2
+* Date               : 2022/08/31
 * Description        :
 * Copyright (c) 2022 Benjamin VERNOUX
 * SPDX-License-Identifier: Apache-2.0
@@ -47,10 +47,16 @@ void log_printf_init(FILE *log_file_handle); /* Required before to call log_prin
 void log_printf_dbg(const char* fmt, ...);
 void log_printf(const char* fmt, ...);
 
+// return 0 if ok or error code
+int usb_init(void);
 /*
 Return 0 if error or struct libusb_device_handle * if success
 */
 struct libusb_device_handle* usb_opendev(int verbose);
+
+void usb_closedev(struct libusb_device_handle* libusb_dev_handle);
+
+void usb_exit(void);
 
 /*
 Return usb speed see enum libusb_speed

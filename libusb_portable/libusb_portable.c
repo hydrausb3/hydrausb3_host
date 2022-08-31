@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : libusb_portable.c
 * Author             : bvernoux
-* Version            : V1.0.1
-* Date               : 2022/08/22
+* Version            : V1.0.2
+* Date               : 2022/08/31
 * Description        :
 * Copyright (c) 2022 Benjamin VERNOUX
 * SPDX-License-Identifier: Apache-2.0
@@ -52,6 +52,7 @@ static FILE *pFile = NULL; /* File for logging */
 static enum libusb_speed usb_speed;
 
 static struct libusb_device_handle *handle = NULL;
+int usb_claim_interface = 0;
 
 void log_printf_init(FILE *log_file_handle)
 {
@@ -127,13 +128,16 @@ void log_printf_dbg(const char* fmt, ...)
 
 	va_start(args, fmt);
 	vfprintf(stdout, fmt, args);
-	fflush(stdout);	
+	va_end(args);
+	fflush(stdout);
+
 	if(pFile != NULL)
 	{
+		va_start(args, fmt);
 		vfprintf(pFile, fmt, args);
+		va_end(args);
 		fflush(pFile);
 	}
-	va_end(args);
 }
 
 void log_printf(const char* fmt, ...)
@@ -142,13 +146,17 @@ void log_printf(const char* fmt, ...)
 
 	va_start(args, fmt);
 	vfprintf(stdout, fmt, args);
-	fflush(stdout);	
+	va_end(args);
+	fflush(stdout);
+
 	if(pFile != NULL)
 	{
+		va_start(args, fmt);
 		vfprintf(pFile, fmt, args);
+		va_end(args);
 		fflush(pFile);
 	}
-	va_end(args);
+
 }
 
 void sleep_ms(int milliseconds) // Cross-platform sleep in milliseconds function
@@ -576,18 +584,6 @@ struct libusb_device_handle* usb_opendev(int verbose)
 	int i = 0;
 	char found = 0;
 
-	const struct libusb_version* version;
-	version = libusb_get_version();
-	log_printf("Using libusb v%d.%d.%d.%d\n", version->major, version->minor, version->micro, version->nano);
-
-	// Init libusb
-	r = libusb_init(NULL);
-	if(r < 0)
-	{
-		log_printf("libusb_opendev() error failed to initialise libusb\n");
-		return NULL;
-	}
-
 	// Get a list of USB devices
 	cnt = libusb_get_device_list(NULL, &devs);
 	if (cnt < 0)
@@ -604,7 +600,6 @@ struct libusb_device_handle* usb_opendev(int verbose)
 		{
 			log_printf("libusb_opendev() error failed to get device descriptor\n");
 			libusb_free_device_list(devs, 1);
-			libusb_close(handle);
 			break;
 		}
 
@@ -615,7 +610,7 @@ struct libusb_device_handle* usb_opendev(int verbose)
 			continue;
 		}
 
-		if(desc.idVendor == VID && desc.idProduct == PID) // HydraUSB3
+		if(desc.idVendor == VID && desc.idProduct == PID) // VID & PID found
 		{
 			if (desc.iSerialNumber)
 			{
@@ -646,13 +641,23 @@ struct libusb_device_handle* usb_opendev(int verbose)
 			}
 			break;
 		}
+		else // VID & PID not found
+		{
+			if(handle != NULL)
+			{
+				usb_closedev(handle);
+			}
+		}
 	}//end of while
 
 	if(found == 0)
 	{
 		log_printf("libusb_opendev() error device with VID:0x%04X PID:0x%04X not found\n", VID, PID);
 		libusb_free_device_list(devs, 1);
-		libusb_close(handle);
+		if(handle != NULL)
+		{
+			usb_closedev(handle);
+		}
 		return NULL;
 	}
 
@@ -669,7 +674,10 @@ struct libusb_device_handle* usb_opendev(int verbose)
 		{
 			log_printf("libusb_opendev() error could not detach kernel driver!\n");
 			libusb_free_device_list(devs, 1);
-			libusb_close(handle);
+			if(handle != NULL)
+			{
+				usb_closedev(handle);
+			}
 			return NULL;
 		}
 	}
@@ -679,13 +687,52 @@ struct libusb_device_handle* usb_opendev(int verbose)
 	{
 		log_printf("libusb_opendev() error cannot claim interface\n");
 		libusb_free_device_list(devs, 1);
-		libusb_close(handle);
+		if(handle != NULL)
+		{
+			usb_closedev(handle);
+		}
 		return NULL;
 	}
 	else
 	{
+		usb_claim_interface = 1;
 		return handle;
 	}
+}
+
+void usb_closedev(struct libusb_device_handle* libusb_dev_handle)
+{
+	if(libusb_dev_handle != NULL)
+	{
+		if(usb_claim_interface == 1)
+		{
+			libusb_release_interface(libusb_dev_handle, 0);
+			usb_claim_interface = 0;
+		}
+		libusb_close(libusb_dev_handle);
+		handle = NULL;
+	}
+}
+
+int usb_init(void)
+{
+	int r;
+	const struct libusb_version* version;
+	version = libusb_get_version();
+	log_printf("Using libusb v%d.%d.%d.%d\n", version->major, version->minor, version->micro, version->nano);
+
+	// Init libusb
+	r = libusb_init(NULL);
+	if(r < 0)
+	{
+		log_printf("libusb_init() error failed to initialise libusb\n");
+	}
+	return r;
+}
+
+void usb_exit(void)
+{
+	libusb_exit(NULL);
 }
 
 enum libusb_speed usb_get_device_speed(libusb_device_handle *handle)
@@ -839,7 +886,7 @@ int USB_TestDataSpeed(struct libusb_device_handle *handle, uint32_t *writebuf, u
 	speed_mbytes_per_sec = (float)(((double)mTotal) / (1000.0 * 1000.0)) / time_diff_s;
 	log_printf("Average speed %.1f MBytes/Sec, Total=%zu Bytes/%zu MBytes\n", speed_mbytes_per_sec, mTotal, (mTotal/(1000 * 1000)));
 
-	log_printf("End USB_TestDataIntegrity(libusb_bulk_transfer) Tests\n");
+	log_printf("End USB_TestDataSpeed(libusb_bulk_transfer) Tests\n");
 	log_printf("Test end with success\n");
 	return 0;
 }

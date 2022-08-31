@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : HydraUSB3_USB_benchmark.c
 * Author             : bvernoux
-* Version            : V1.0.1
-* Date               : 2022/08/22
+* Version            : V1.0.2
+* Date               : 2022/08/31
 * Description        :
 * Copyright (c) 2022 Benjamin VERNOUX
 * SPDX-License-Identifier: Apache-2.0
@@ -32,6 +32,11 @@ static uint8_t mWriteBuf[ (USB3_EP1_BULK_BURST_SIZE+4) ];
 #define TEST_NUM_HS 10 // Number of test for USB2 High Speed(480Mbit/s)
 #define TEST_DATA_LEN 0x800000 // 8 MiB
 //#define TEST_DATA_LEN 0x1000000 // 16 MiB fail on some PC with libusb (Can return libusb_bulk_transfer return error=-11 => NO MEM)
+
+#define USB_SWITCH_DELAY_MILLISEC (10)
+#define USB_REBOOT_DELAY_MILLISEC (500)
+#define USB_ENUM_DELAY_MILLISEC (800)
+
 static __attribute__ ((aligned (128))) uint32_t mReadBigBuf[ ((TEST_DATA_LEN+16)/sizeof(uint32_t)) ];
 static __attribute__ ((aligned (128))) uint32_t mWriteBigBuf[ ((TEST_DATA_LEN+16)/sizeof(uint32_t)) ];
 
@@ -42,12 +47,14 @@ void cleanup(void)
 	if(pFile != NULL)
 	{
 		fclose(pFile);
+		pFile = NULL;
 	}
 	if(handle != NULL)
 	{
-		libusb_release_interface(handle, 0);
-		libusb_close(handle);
+		usb_closedev(handle);
+		handle = NULL;
 	}
+	usb_exit();
 }
 
 void error_exit(char* error_str)
@@ -56,10 +63,9 @@ void error_exit(char* error_str)
 	{
 		log_printf("%sTests end with failure(s)\n", error_str);
 	}
-	cleanup();
 	log_printf("Press Enter to exit\n");
 	getchar();
-	libusb_exit(NULL);
+	cleanup();
 	exit(-1);
 }
 
@@ -187,18 +193,22 @@ int main(int argc, char *argv[])
 	pFile = fopen(filename, "w");
 	if(pFile == NULL)
 	{
-		log_printf("fopen(filename, \"w\") error (filename=\"%s\")\n", filename);
+		fprintf(stderr, "fopen(filename, \"w\") error (filename=\"%s\")\n", filename);
+		fflush(stderr);
 		error_exit(NULL);
 	}
 	log_printf_init(pFile);
-
-	log_printf("HydraUSB3_USB_benchmark v%s B.VERNOUX 22-Aug-2022\n", VERSION);
+	log_printf("HydraUSB3_USB_benchmark v%s B.VERNOUX 31-Aug-2022\n", VERSION);
 
 	log_printf("Options: verbose=%d\n",
 			   config.verbose);
 
 	log_printf("USB3_EP1_BULK_BURST_SIZE=%d USB3_EP2_BULK_BURST_SIZE=%d\n", USB3_EP1_BULK_BURST_SIZE, USB3_EP2_BULK_BURST_SIZE);
 
+	if(usb_init() < 0)
+	{
+		error_exit("usb_init() error exit\n");
+	}
 
 	handle = usb_opendev(config.verbose);
 	if(handle == NULL)
@@ -232,17 +242,16 @@ int main(int argc, char *argv[])
 
 	log_printf_dbg("Start USB2 HS Force\n");
 	{
-		/* Write command to Get USB STATUS */
-		memWBuf[0] = USB_CMD_USB2;
+		memWBuf[0] = USB_CMD_USB2; // Force USB2 HS
 		usb_write_EP1(handle, data_tx);
 	}
 	/* Wait to be sure the command is executed */
-	sleep_ms(10);
+	sleep_ms(USB_SWITCH_DELAY_MILLISEC);
 	/* Release and close the handle as USB enumeration is done again for USB2 HS */
-	libusb_release_interface(handle, 0);
-	libusb_close(handle);
+	usb_closedev(handle);
+	handle = NULL;
 	/* Wait USB2 HS enumeration */
-	sleep_ms(800);
+	sleep_ms(USB_ENUM_DELAY_MILLISEC);
 	handle = usb_opendev(config.verbose);
 	log_printf_dbg("End USB2 HS Force\n");
 	if(handle == NULL)
@@ -275,8 +284,7 @@ int main(int argc, char *argv[])
 
 	log_printf_dbg("Start Read USB2 Status\n");
 	{
-		/* Write command to Get USB STATUS */
-		memWBuf[0] = USB_CMD_USBS;
+		memWBuf[0] = USB_CMD_USBS; // Get USB2 Status
 		usb_write_EP1(handle, data_tx);
 		/* Read USB Status Report */
 		if(usb_read_EP1(handle, data_rx) == 1)
@@ -302,17 +310,16 @@ int main(int argc, char *argv[])
 
 	log_printf_dbg("Start USB3 Force\n");
 	{
-		/* Write command to Get USB STATUS */
-		memWBuf[0] = USB_CMD_USB3;
+		memWBuf[0] = USB_CMD_USB3; // Force USB3
 		usb_write_EP1(handle, data_tx);
 	}
 	/* Wait to be sure the command is executed */
-	sleep_ms(10);
+	sleep_ms(USB_SWITCH_DELAY_MILLISEC);
 	/* Release and close the handle as USB enumeration is done again for USB2 HS */
-	libusb_release_interface(handle, 0);
-	libusb_close(handle);
+	usb_closedev(handle);
+	handle = NULL;
 	/* Wait USB2 HS enumeration */
-	sleep_ms(800);
+	sleep_ms(USB_ENUM_DELAY_MILLISEC);
 	handle = usb_opendev(config.verbose);
 	log_printf_dbg("End USB3 Force\n");
 	if(handle == NULL)
@@ -346,7 +353,6 @@ int main(int argc, char *argv[])
 
 	log_printf_dbg("Read Log\n");
 	{
-		/* Write command to Read Log */
 		memWBuf[0] = USB_CMD_LOGR; /* Read Log command */
 		usb_write_EP1(handle, data_tx);
 		/* Read Log */
@@ -365,8 +371,7 @@ int main(int argc, char *argv[])
 
 	log_printf_dbg("Start Read USB3 Status\n");
 	{
-		/* Write command to Get USB STATUS */
-		memWBuf[0] = USB_CMD_USBS;
+		memWBuf[0] = USB_CMD_USBS; // Get USB3 Status
 		usb_write_EP1(handle, data_tx);
 		/* Read USB Status Report */
 		if(usb_read_EP1(handle, data_rx) == 1)
@@ -393,7 +398,6 @@ int main(int argc, char *argv[])
 
 	log_printf_dbg("Read Log\n");
 	{
-		/* Write command to Read Log */
 		memWBuf[0] = USB_CMD_LOGR; /* Read Log command */
 		usb_write_EP1(handle, data_tx);
 		/* Read Log */
@@ -425,10 +429,9 @@ int main(int argc, char *argv[])
 	memWBuf[0] = USB_CMD_BOOT;
 	usb_write_EP1(handle, data_tx);
 	/* Wait to be sure the command is executed */
-	sleep_ms(500);
+	sleep_ms(USB_REBOOT_DELAY_MILLISEC);
 
 	cleanup();
-	libusb_exit(NULL);
 
 	return EXIT_SUCCESS;
 }
