@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repository and submodules
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
     - name: Install pkg-config libusb-1.0-0-dev
@@ -38,7 +38,7 @@ jobs:
     - name: Upload artifact
       env: 
         APP_VERSION: "${{steps.id_version.outputs.app_version}}"
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: HydraUSB3_USB_benchmark_Ubuntu-${{env.APP_VERSION}}
         path: ./
@@ -50,10 +50,10 @@ jobs:
         shell: msys2 {0}
     steps:
     - name: Checkout repository and submodules
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: recursive
-    - uses: msys2/setup-msys2@v2
+    - uses: msys2/setup-msys2@v3
       with:
           msystem: MINGW64
           update: true
@@ -79,7 +79,7 @@ jobs:
     - name: Upload artifact
       env: 
         APP_VERSION: "${{steps.id_version.outputs.app_version}}"
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: HydraUSB3_USB_benchmark_Windows-${{env.APP_VERSION}}
         path: ./
