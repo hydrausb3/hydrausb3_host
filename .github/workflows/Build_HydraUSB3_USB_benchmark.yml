@@ -55,7 +55,7 @@ jobs:
       with:
           msystem: MINGW64
           update: true
-          install: mingw-w64-x86_64-make mingw-w64-x86_64-pkgconf mingw-w64-x86_64-gcc mingw-w64-x86_64-libusb    
+          install: git mingw-w64-x86_64-make mingw-w64-x86_64-pkgconf mingw-w64-x86_64-gcc mingw-w64-x86_64-libusb    
     - uses: actions/checkout@v3
       with:
         submodules: recursive
