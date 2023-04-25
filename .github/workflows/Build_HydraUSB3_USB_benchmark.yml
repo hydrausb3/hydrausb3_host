@@ -17,20 +17,22 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: recursive
+
+    - name: Checkout
+      run: git fetch --prune --unshallow
+
     - name: Install pkg-config libusb-1.0-0-dev
       run: sudo apt-get install pkg-config libusb-1.0-0-dev
 
     - name: Get build timestamp
       id: id_date
       shell: bash
-      run: echo "::set-output name=timestamp::$(date +%Y-%m-%d-%H-%M-%S)"
+      run: echo "timestamp=$(date +%Y-%m-%d-%H-%M-%S)" >> $GITHUB_OUTPUT
 
-    - name: Get app version
+    - name: Get app version + timestamp
       id: id_version
-      shell: bash
-      run: |
-         app_major_minor_patch=`grep -oP '(?<=VERSION = )[0-9.]+' Makefile`
-         echo "::set-output name=app_version::v$app_major_minor_patch-${{steps.id_date.outputs.timestamp}}"
+      run: echo "app_version=$(git describe --tags HEAD)-${{steps.id_date.outputs.timestamp}}" >> $GITHUB_OUTPUT
+
     - name: Build app
       shell: bash
       run: |
@@ -40,7 +42,7 @@ jobs:
         APP_VERSION: "${{steps.id_version.outputs.app_version}}"
       uses: actions/upload-artifact@v3
       with:
-        name: HydraUSB3_USB_benchmark_Ubuntu-${{env.APP_VERSION}}
+        name: HydraUSB3_USB_benchmark_Ubuntu-${{steps.id_version.outputs.app_version}}
         path: ./
 
   HydraUSB3_USB_benchmark_Windows:
@@ -53,6 +55,10 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: recursive
+
+    - name: Checkout
+      run: git fetch --prune --unshallow
+
     - uses: msys2/setup-msys2@v2
       with:
           msystem: MINGW64
@@ -61,25 +67,24 @@ jobs:
 
     - name: Get build timestamp
       id: id_date
-      run: echo "::set-output name=timestamp::$(date +%Y-%m-%d-%H-%M-%S)"
+      shell: bash
+      run: echo "timestamp=$(date +%Y-%m-%d-%H-%M-%S)" >> $GITHUB_OUTPUT
 
-    - name: Get app version
+    - name: Get app version + timestamp
       id: id_version
-      shell: msys2 {0}
-      run: |
-         cd HydraUSB3_USB_benchmark
-         app_major_minor_patch=`grep -oP '(?<=VERSION = )[0-9.]+' Makefile`
-         echo "::set-output name=app_version::v$app_major_minor_patch-${{steps.id_date.outputs.timestamp}}"
+      run: echo "app_version=$(git describe --tags HEAD)-${{steps.id_date.outputs.timestamp}}" >> $GITHUB_OUTPUT
+
     - name: Build app
       shell: msys2 {0}
       run: |
          cd HydraUSB3_USB_benchmark
          mingw32-make
          cp /mingw64/bin/libusb-1.0.dll ./
+
     - name: Upload artifact
       env: 
         APP_VERSION: "${{steps.id_version.outputs.app_version}}"
       uses: actions/upload-artifact@v3
       with:
-        name: HydraUSB3_USB_benchmark_Windows-${{env.APP_VERSION}}
+        name: HydraUSB3_USB_benchmark_Windows-${{steps.id_version.outputs.app_version}}
         path: ./
