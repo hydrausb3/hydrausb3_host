@@ -51,19 +51,17 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-    - name: Checkout repository and submodules
-      uses: actions/checkout@v3
+    - uses: msys2/setup-msys2@v2
+      with:
+          msystem: MINGW64
+          update: true
+          install: mingw-w64-x86_64-make mingw-w64-x86_64-pkgconf mingw-w64-x86_64-gcc mingw-w64-x86_64-libusb    
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
 
     - name: Checkout
       run: git fetch --prune --unshallow
-
-    - uses: msys2/setup-msys2@v2
-      with:
-          msystem: MINGW64
-          update: true
-          install: mingw-w64-x86_64-make mingw-w64-x86_64-pkgconf mingw-w64-x86_64-gcc mingw-w64-x86_64-libusb
 
     - name: Get build timestamp
       id: id_date
