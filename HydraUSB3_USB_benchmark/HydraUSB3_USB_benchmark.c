@@ -33,9 +33,9 @@ static uint8_t mWriteBuf[ (USB3_EP1_BULK_BURST_SIZE+4) ];
 #define TEST_DATA_LEN 0x800000 // 8 MiB
 //#define TEST_DATA_LEN 0x1000000 // 16 MiB fail on some PC with libusb (Can return libusb_bulk_transfer return error=-11 => NO MEM)
 
-#define USB_SWITCH_DELAY_MILLISEC (10)
-#define USB_REBOOT_DELAY_MILLISEC (500)
-#define USB_ENUM_DELAY_MILLISEC (800)
+#define USB_SWITCH_DELAY_MILLISEC (100)
+#define USB_REBOOT_DELAY_MILLISEC (1000)
+#define USB_ENUM_DELAY_MILLISEC (2500)
 
 static __attribute__ ((aligned (128))) uint32_t mReadBigBuf[ ((TEST_DATA_LEN+16)/sizeof(uint32_t)) ];
 static __attribute__ ((aligned (128))) uint32_t mWriteBigBuf[ ((TEST_DATA_LEN+16)/sizeof(uint32_t)) ];
@@ -198,7 +198,7 @@ int main(int argc, char *argv[])
 		error_exit(NULL);
 	}
 	log_printf_init(pFile);
-	log_printf("HydraUSB3_USB_benchmark v%s B.VERNOUX 31-Aug-2022\n", VERSION);
+	log_printf("HydraUSB3_USB_benchmark v%s B.VERNOUX 08-May-2023\n", VERSION);
 
 	log_printf("Options: verbose=%d\n",
 			   config.verbose);
