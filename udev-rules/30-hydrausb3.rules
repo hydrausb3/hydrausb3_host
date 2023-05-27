@@ -1,0 +1,9 @@
+# UDEV Rules for HydraUSB3 board, http://www.hydrausb3.com
+#
+# To install, type this command in a terminal:
+# sudo cp 30-hydrausb3.rules /etc/udev/rules.d/30-hydrausb3.rules
+#
+# In order to prevent rebooting, run sudo udevadm control --reload-rules after adding the rule(s).
+# Finally, unplug your HydraUSB3 board (if connected) and reattach it.
+#
+ATTR{idVendor}=="16c0", ATTR{idProduct}=="05dc", SYMLINK+="hydrausb3-%k", TAG+="uaccess"
